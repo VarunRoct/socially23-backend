@@ -165,7 +165,7 @@ async def google_login():
 
 
 # 🔹 Google OAuth – handle callback (PASTE THIS PART)
-@api_router.get("/auth/google/callback")
+@api_router.post("/auth/google/callback")
 async def google_callback(request: Request, response: Response):
     code = request.query_params.get("code")
 
