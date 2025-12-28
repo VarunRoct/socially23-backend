@@ -151,6 +151,9 @@ async def get_current_user(session_token: Optional[str]) -> Optional[User]:
 # Google OAuth – start login
 @api_router.get("/auth/google/login")
 async def google_login():
+    print("GOOGLE REDIRECT URI USED:", GOOGLE_REDIRECT_URI)
+
+
     params = {
         "client_id": GOOGLE_CLIENT_ID,
         "redirect_uri": GOOGLE_REDIRECT_URI,
