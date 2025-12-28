@@ -887,7 +887,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://localhost:3000"
+        "https://socially23-backend-production-3473.up.railway.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
