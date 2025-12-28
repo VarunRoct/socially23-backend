@@ -19,6 +19,7 @@ from groq import Groq
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Request
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -165,7 +166,8 @@ async def google_login():
 
 # 🔹 Google OAuth – handle callback (PASTE THIS PART)
 @api_router.get("/auth/google/callback")
-async def google_callback(code: str, response: Response):
+async def google_callback(request: Request, response: Response):
+    code = request.query_params.get("code")
 
     
 
