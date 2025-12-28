@@ -264,7 +264,10 @@ async def google_callback(request: Request, response: Response):
         max_age=7 * 24 * 60 * 60,
     )
 
-    return RedirectResponse(url="https://localhost:3000")
+    return RedirectResponse(
+    url="https://socially23-backend-production-3473.up.railway.app/api/auth/me"
+)
+
 # 🔹 END OF NEW BLOCK
 
 
