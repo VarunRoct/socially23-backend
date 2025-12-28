@@ -253,7 +253,7 @@ async def google_callback(code: str, response: Response):
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=False,       # for localhost
+        secure=True,       # for localhost
         samesite="lax",
         path="/",
         max_age=7 * 24 * 60 * 60,
@@ -319,7 +319,7 @@ async def create_session(payload: SessionRequest, response: Response):
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=False,      # local http
+        secure=True,      # local http
         samesite="lax",    # local, same-site
         path="/",
         max_age=7 * 24 * 60 * 60,
@@ -416,7 +416,7 @@ async def google_exchange(payload: GoogleAuthCode, response: Response):
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=False,       # for localhost; change to True when using HTTPS in production
+        secure=True,       # for localhost; change to True when using HTTPS in production
         samesite="lax",
         path="/",
         max_age=7 * 24 * 60 * 60,
