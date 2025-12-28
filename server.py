@@ -264,7 +264,7 @@ async def google_callback(request: Request, response: Response):
         max_age=7 * 24 * 60 * 60,
     )
 
-    return RedirectResponse(url="http://localhost:3000")
+    return RedirectResponse(url="https://localhost:3000")
 # 🔹 END OF NEW BLOCK
 
 
