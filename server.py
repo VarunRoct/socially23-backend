@@ -152,7 +152,7 @@ async def get_current_user(session_token: Optional[str]) -> Optional[User]:
 async def google_login():
     params = {
         "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "redirect_uri": "http://localhost:8000/api/auth/google/callback",
         "response_type": "code",
         "scope": "openid email profile",
         "access_type": "offline",
