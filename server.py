@@ -164,9 +164,10 @@ async def google_login():
 
 
 # 🔹 Google OAuth – handle callback (PASTE THIS PART)
-@api_router.post("/auth/google/callback")
-async def google_callback(payload: GoogleCallbackRequest, response: Response):
-    code = payload.code
+@api_router.get("/auth/google/callback")
+async def google_callback(code: str, response: Response):
+
+    
 
     if not code:
         raise HTTPException(status_code=400, detail="Missing authorization code")
@@ -258,7 +259,7 @@ async def google_callback(payload: GoogleCallbackRequest, response: Response):
         max_age=7 * 24 * 60 * 60,
     )
 
-    return {"user": user, "session_token": session_token}
+    return RedirectResponse(url="http://localhost:3000")
 # 🔹 END OF NEW BLOCK
 
 
