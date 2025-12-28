@@ -18,7 +18,7 @@ import base64
 from groq import Groq
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
-
+from fastapi.middleware.cors import CORSMiddleware
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -145,20 +145,7 @@ async def get_current_user(session_token: Optional[str]) -> Optional[User]:
         return User(**user_doc)
     return None
 
-# Google OAuth – start login
-@api_router.get("/auth/google/login")
-async def google_login():
-    params = {
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": GOOGLE_REDIRECT_URI,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "access_type": "offline",
-        "prompt": "consent",
-    }
 
-    auth_url = "https://accounts.google.com/o/oauth2/v2/auth?" + urlencode(params)
-    return RedirectResponse(auth_url)
 
 # Google OAuth – start login
 @api_router.get("/auth/google/login")
@@ -275,10 +262,6 @@ async def google_callback(payload: GoogleCallbackRequest, response: Response):
 # 🔹 END OF NEW BLOCK
 
 
-# Auth endpoints
-@api_router.post("/auth/session")
-async def create_session(payload: SessionRequest, response: Response):
-    ...
 
 
 # Auth endpoints
@@ -323,18 +306,26 @@ async def create_session(payload: SessionRequest, response: Response):
 
     await db.user_sessions.insert_one(session_dict)
 
-    # 4) Set cookie (for localhost, secure=False & samesite="lax")
+        # 5) Set cookie (CROSS-SITE: Netlify -> Railway)
+    response = JSONResponse(
+        {
+            "user": user.model_dump(),   # or existing_user dict if you prefer
+            "session_token": session_token,
+        }
+    )
+
     response.set_cookie(
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=False,       # important for http://localhost
-        samesite="lax",
+        secure=False,      # local http
+        samesite="lax",    # local, same-site
         path="/",
         max_age=7 * 24 * 60 * 60,
     )
 
-    return {"user": user, "session_token": session_token}
+    return response
+
 
 @api_router.post("/auth/google/exchange")
 async def google_exchange(payload: GoogleAuthCode, response: Response):
@@ -892,13 +883,11 @@ async def get_ai_status(
 
 # Include the router in the main app
 app.include_router(api_router)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://socially-23.preview.emergentagent.com"
+        "https://localhost:3000"
     ],
     allow_credentials=True,
     allow_methods=["*"],
